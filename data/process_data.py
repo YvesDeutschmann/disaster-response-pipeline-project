@@ -6,8 +6,13 @@ from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
     """
-    Loads the messages and categories from flatfiles.
-    Merges both datasets into a DataFrame.
+    Loads the data.
+    
+    Args:
+        messages_filepath: String - csv file containing disaster messages.
+        categories_filepath: String - csv file containing categories for each disaster message.
+    Returns:
+        df: DataFrame containing messages and categories.
     """
     
     messages = pd.read_csv(messages_filepath)
@@ -17,7 +22,14 @@ def load_data(messages_filepath, categories_filepath):
     return df
 
 def clean_data(df):
-    """Clean up the message dataframe."""
+    """
+    Clean up the message dataframe.
+    
+    Args:
+        df: DataFrame containing messages and categories.
+    Returns:
+        df: cleaned DataFrame containing messages and categories.
+    """
     # create a dataframe of the 36 individual category columns
     categories = df.categories.str.split(';', expand=True)
 
@@ -45,6 +57,13 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    """
+    Store data in database.
+    
+    Args:
+        df: cleaned DataFrame containing messages and categories.
+        database_filename: String - Name of Database the DataFrame is stored in.
+    """
     engine = create_engine(r'sqlite:///{}'.format(database_filename))
     df.to_sql('CleanData', engine, index=False, if_exists='replace')  
 
