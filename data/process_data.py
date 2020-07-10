@@ -52,6 +52,8 @@ def clean_data(df):
 
     # remove duplicates
     df.drop_duplicates(inplace=True)
+    # remove rows with a value of 2 in 'related' column
+    df.drop(df[df.related==2].index, inplace=True)
 
     return df
 
