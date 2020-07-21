@@ -2,6 +2,7 @@ import json
 import joblib
 import plotly
 import pandas as pd
+import numpy as np
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
@@ -35,17 +36,19 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     data = df.iloc[:,4:]
     data_fig1 = data.sum().sort_values(ascending=False)
-
-    data['relevant_cats'] = data.sum(axis=1)
-    bins=data.relevant_cats.max()
-        
+    
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     figures = [
-        px.bar(data_fig1, x=data_fig1.keys(), y=data_fig1.values, 
-                    title="Distribution of Message Categories"),
+        px.bar(data_fig1, x=data_fig1.keys(), y=data_fig1.values,
+                title="Distribution of Message Categories",
+                labels={"x": "categories",  "y": "count"}),
 
-        # px.histogram(data, y=data.relevant_cats)
+        px.histogram(x= data.sum(axis='columns'),
+                title="Distribution of relevant categories per row",
+                labels={
+                    "x": "total number of relevant categories",
+                    "y": "frequency"})
     ]
     
     # encode plotly graphs in JSON
