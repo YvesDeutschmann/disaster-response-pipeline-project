@@ -10,8 +10,6 @@ from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
 import plotly.express as px
-# from plotly.graph_objs import Bar
-# from plotly.graph_objects import Histogram
 
 from sqlalchemy import create_engine
 
