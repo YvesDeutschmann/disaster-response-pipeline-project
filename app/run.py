@@ -1,4 +1,5 @@
 import json
+import joblib
 import plotly
 import pandas as pd
 
@@ -7,30 +8,22 @@ from nltk.tokenize import word_tokenize
 
 from flask import Flask
 from flask import render_template, request, jsonify
-from plotly.graph_objs import Bar
-from sklearn.externals import joblib
+import plotly.express as px
+# from plotly.graph_objs import Bar
+# from plotly.graph_objects import Histogram
+
 from sqlalchemy import create_engine
 
+from models.train_classifier import tokenize, f1_scorer
 
 app = Flask(__name__)
 
-def tokenize(text):
-    tokens = word_tokenize(text)
-    lemmatizer = WordNetLemmatizer()
-
-    clean_tokens = []
-    for tok in tokens:
-        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        clean_tokens.append(clean_tok)
-
-    return clean_tokens
-
 # load data
-engine = create_engine('sqlite:///../data/YourDatabaseName.db')
-df = pd.read_sql_table('YourTableName', engine)
+engine = create_engine('sqlite:///../data/DisasterResponse.db')
+df = pd.read_sql_table('CleanData', engine)
 
 # load model
-model = joblib.load("../models/your_model_name.pkl")
+model = joblib.load("../models/classifier.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -40,38 +33,27 @@ def index():
     
     # extract data needed for visuals
     # TODO: Below is an example - modify to extract data for your own visuals
-    genre_counts = df.groupby('genre').count()['message']
-    genre_names = list(genre_counts.index)
-    
+    data = df.iloc[:,4:]
+    data_fig1 = data.sum().sort_values(ascending=False)
+
+    data['relevant_cats'] = data.sum(axis=1)
+    bins=data.relevant_cats.max()
+        
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
-    graphs = [
-        {
-            'data': [
-                Bar(
-                    x=genre_names,
-                    y=genre_counts
-                )
-            ],
+    figures = [
+        px.bar(data_fig1, x=data_fig1.keys(), y=data_fig1.values, 
+                    title="Distribution of Message Categories"),
 
-            'layout': {
-                'title': 'Distribution of Message Genres',
-                'yaxis': {
-                    'title': "Count"
-                },
-                'xaxis': {
-                    'title': "Genre"
-                }
-            }
-        }
+        # px.histogram(data, y=data.relevant_cats)
     ]
     
     # encode plotly graphs in JSON
-    ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
-    graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
+    ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
+    figuresJSON  = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
     
     # render web page with plotly graphs
-    return render_template('master.html', ids=ids, graphJSON=graphJSON)
+    return render_template('master.html', ids=ids, figuresJSON=figuresJSON )
 
 
 # web page that handles user query and displays model results
@@ -93,8 +75,7 @@ def go():
 
 
 def main():
-    app.run(host='0.0.0.0', port=3001, debug=True)
-
+    app.run(host='127.0.0.1', port=5000, debug=True)
 
 if __name__ == '__main__':
     main()
