@@ -35,17 +35,22 @@ The app uses a Machine Learning Model to categorize any new messages received. I
 ## Running Instructions
 ### Run process_data.py
 - From the root of the programm run the following code:
+
 `python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db`
 ### Run train_classifier.py
 - From the root of the programm run the following code:
+
 `python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl`
 ### Run web app
 - Naviagte to the app directory and run the following code: 
+
 `python run.py`
+
 - Open http://127.0.0.1:5000/ in your browser
 
 ## Results
 Altohough the overall score was acceptable the model lacks in predicitve value when it comes to underrepresented categories. the category 'child_alone' for example does not have a single positive classification in this dataset. This means that the ML model is unable to learn what are neccessary feature to predict this label. Hence the web app is not able to predict this category even when we directly enter 'child alone.'
+
 To improve this behaviour we have to balance our dataset and try to feed the model roughly the same amount of data for every single category we try to predict. Until then we have to be careful with predictions for underepresented categories.   
 
 Licensing, Authors, Acknowledgements
