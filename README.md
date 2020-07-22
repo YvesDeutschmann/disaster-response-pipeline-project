@@ -53,5 +53,5 @@ Altohough the overall score was acceptable the model lacks in predicitve value w
 
 To improve this behaviour we have to balance our dataset and try to feed the model roughly the same amount of data for every single category we try to predict. Until then we have to be careful with predictions for underepresented categories.   
 
-Licensing, Authors, Acknowledgements
+## Licensing, Authors, Acknowledgements
 This app was completed as part of the Udacity Data Scientist Nanodegree. Code templates and data were provided by Udacity. The data was originally sourced by Udacity from Figure Eight.
