@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="disaster-response", 
-    version="0.0.1",
+    version="1.0.0",
     author="Yves Deutschmann",
     author_email="yves.deutschmann@gmail.com",
     description="Udacity's Disaster Response Pipeline project",
